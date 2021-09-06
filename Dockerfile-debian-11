@@ -1,0 +1,21 @@
+FROM debian:11
+
+LABEL comment="Debian 11 deb package build environment" \
+      maintainer="Antony Pavlov <antonynpavlov@gmail.com>"
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+# use apt-cacher proxy if necessary
+#RUN echo 'Acquire::http { Proxy "http://my-apt-cacher-host:3142"; };' >> /etc/apt/apt.conf.d/01proxy
+
+RUN set -ex \
+    && sed -i -- 's/# deb-src/deb-src/g' /etc/apt/sources.list \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+               build-essential \
+               cdbs \
+               devscripts \
+               equivs \
+               fakeroot \
+    && apt-get clean \
+    && rm -rf /tmp/* /var/tmp/*

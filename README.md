@@ -57,6 +57,22 @@ in it.
 
     ./build -i docker-deb-builder:17.04 -o output -d dependencies ~/my-package-source
 
+
+### Example
+
+```
+IMAGE=deb-builder-deb11
+
+docker build -t $IMAGE -f Dockerfile-debian-11 .
+
+mkdir -p sources
+docker run -it --rm -v $(pwd)/sources:/sources $IMAGE /bin/bash -c "echo 'deb-src http://deb.debian.org/debian bullseye main contrib non-free' >> /etc/apt/sources.list && apt-get update && cd /sources && apt-get source sl"
+
+mkdir -p debs
+./build -i $IMAGE -o debs/ sources/sl-5.02
+```
+
+
 ## Integrating with CI
 
 In this tutorial all package-specific build dependencies are installed
